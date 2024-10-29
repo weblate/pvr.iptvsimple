@@ -221,12 +221,35 @@ char* Epg::FillBufferFromXMLTVData(std::string& data, std::string& decompressedD
   return buffer;
 }
 
+namespace {
+
+char GetLastValidCharInBuffer(const char* buffer)
+{
+  size_t charIndex = std::strlen(buffer) - 1;
+  char lastValidChar = buffer[charIndex];
+
+  while (charIndex != 0 &&
+         (buffer[charIndex] == ' ' ||
+          buffer[charIndex] == '\t'||
+          buffer[charIndex] == '\n' ||
+          buffer[charIndex] == '\r' ||
+          buffer[charIndex] == '\f' ||
+          buffer[charIndex] == '\v'))
+  {
+    lastValidChar = buffer[--charIndex];
+  }
+
+  return lastValidChar;
+}
+
+} // unnamed namespace
+
 const XmltvFileFormat Epg::GetXMLTVFileFormat(const char* buffer)
 {
   if (!buffer)
     return XmltvFileFormat::INVALID;
 
-  if ((buffer[0] == '\x3C' && buffer[std::strlen(buffer) - 1] == '\x3E') || // Start with < and ends with >
+  if ((buffer[0] == '\x3C' && GetLastValidCharInBuffer(buffer) == '\x3E') || // Start with < and ends with >
       (buffer[0] == '\x3C' && buffer[1] == '\x3F' &&  buffer[2] == '\x78' && // xml should starts with '<?xml'
        buffer[3] == '\x6D' && buffer[4] == '\x6C'))
   {
