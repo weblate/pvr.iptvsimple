@@ -44,6 +44,8 @@ namespace iptvsimple
 
     bool m_channelGroupsLoadFailed = false;
 
+    int m_groupBackendOrderPosition;
+
     std::shared_ptr<iptvsimple::InstanceSettings> m_settings;
   };
 } //namespace iptvsimple
