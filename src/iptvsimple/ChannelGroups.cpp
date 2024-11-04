@@ -27,6 +27,7 @@ void ChannelGroups::Clear()
 {
   m_channelGroups.clear();
   m_channelGroupsLoadFailed = false;
+  m_groupBackendOrderPosition = 0;
 }
 
 int ChannelGroups::GetChannelGroupsAmount() const
@@ -115,6 +116,7 @@ int ChannelGroups::AddChannelGroup(iptvsimple::data::ChannelGroup& channelGroup)
   if (!existingChannelGroup)
   {
     channelGroup.SetUniqueId(m_channelGroups.size() + 1);
+    channelGroup.SetPosition(m_groupBackendOrderPosition++);
 
     m_channelGroups.emplace_back(channelGroup);
 
